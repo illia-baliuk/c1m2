@@ -9,9 +9,17 @@
 #
 #*****************************************************************************
 
-# Add your Source files to this variable
-SOURCES =
+# Common source files
+SOURCES = ./main.c \
+	  ./memory.c
 
-# Add your include paths to this variable
-INCLUDES = 
+# Include common paths
+INCLUDES = -I../include/common/
+
+ifeq ($(PLATFORM), MSP432)
+	SOURCES += ./startup_msp432p401r_gcc.c \
+		   ./interrupts_msp432p401r_gcc.c \
+		   ./system_msp432p401r.c
+	INCLUDES += -I../include/msp432/
+endif
 
