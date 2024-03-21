@@ -20,6 +20,7 @@ ifeq ($(PLATFORM), MSP432)
 	SOURCES += ./startup_msp432p401r_gcc.c \
 		   ./interrupts_msp432p401r_gcc.c \
 		   ./system_msp432p401r.c
-	INCLUDES += -I../include/msp432/
+	INCLUDES += -I../include/msp432/ \
+		    -I../include/CMSIS/
 endif
 

@@ -33,9 +33,7 @@ include sources.mk
 
 # Platform Overrides
 ifndef PLATFORM
-	PLATFORM = HOST
-# else
-# PLATFORM = $(PLATFORM)
+PLATFORM = HOST
 endif 
 
 
@@ -53,19 +51,21 @@ MAP = $(BASENAME).map
 OBJS = $(SOURCES:.c=.o)
 
 CC = gcc
-AS = as
+OBJ = objdump
 LDFLAGS = -Wl,-Map=$(MAP)
 CFLAGS = -Wall \
 	 -Werror \
 	 -g \
 	 -O0 \
 	 -std=c99 \
+	 -MMD \
 	 -D$(PLATFORM)
 
 ifeq ($(PLATFORM), MSP432)
 
 CC = arm-none-eabi-gcc
-AC = arm-none-eabi-as
+OBJ = arm-none-eabi-objdump
+
 CFLAGS += -mcpu=$(CPU) \
 	  -march=$(ARCH) \
 	  -mthumb\
@@ -87,7 +87,7 @@ compile-all: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) $(MAP) *.o *.i *.asm
+	rm -f $(TARGET) $(MAP) *.o *.i *.d *.asm
 
 .PHONY: as
 as: $(TARGET)
@@ -103,5 +103,5 @@ $(TARGET): $(OBJS)
 	$(CC) -c $^ $(CFLAGS) $(INCLUDES) -o $@
 
 %.asm : %.o
-	objdump -S $^ > $@
+	$(OBJ) -S $^ > $@
 
